@@ -1,4 +1,4 @@
-package project.passwordguard.viewmodel;
+package project.passwordguard.activity.main.viewmodel;
 
 import android.app.Application;
 

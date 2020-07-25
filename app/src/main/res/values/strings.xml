@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">PasswordGuard</string>
+    <string name="website_placeholder">www.facebook.com</string>
+    <string name="username_placeholder">mikica_milovanovic</string>
+    <string name="email_placeholder">mikicamilovanovic@gmail.com</string>
+    <string name="password_placeholder">mikica_password</string>
 </resources>
