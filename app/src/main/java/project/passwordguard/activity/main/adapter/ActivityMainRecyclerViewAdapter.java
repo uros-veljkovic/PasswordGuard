@@ -1,6 +1,7 @@
 package project.passwordguard.activity.main.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 import project.passwordguard.R;
@@ -41,7 +44,25 @@ public class ActivityMainRecyclerViewAdapter extends RecyclerView.Adapter<Activi
         CredentialsEntity credentialsEntity = credentialsEntities.get(position);
 
         holder.itemBinding.setCredentials(credentialsEntity);
+        bindImageBasedOnWebsiteUrl(holder, credentialsEntity);
+
         holder.itemBinding.executePendingBindings();
+    }
+
+    //TODO: Proveri da li je bolje da radis bind sličice preko contains (npr uzmemo sve slicice pa radimo contains)
+    private void bindImageBasedOnWebsiteUrl(@NonNull ViewHolder holder, CredentialsEntity credentialsEntity) {
+/*        Field[] drawablesFields = R.drawable.class.getFields();
+        ArrayList<Drawable> drawables = new ArrayList<>();
+
+        for (Field field : drawablesFields) {
+            field.getName().contains(credentialsEntity.getWebsiteUrl()){
+                //TODO: ako sadrzi, binduj tu slicicu
+            }
+        }*/
+
+        Context context = holder.itemBinding.credentialsItemIvWebsiteLogo.getContext();
+        int drawableID = context.getResources().getIdentifier(credentialsEntity.getWebsiteUrl(), "drawable", context.getPackageName());
+        holder.itemBinding.credentialsItemIvWebsiteLogo.setImageResource(drawableID);
     }
 
     @Override

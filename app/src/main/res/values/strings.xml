@@ -4,4 +4,5 @@
     <string name="username_placeholder">mikica_milovanovic</string>
     <string name="email_placeholder">mikicamilovanovic@gmail.com</string>
     <string name="password_placeholder">mikica_password</string>
+    <string name="search_placeholder">Search</string>
 </resources>
