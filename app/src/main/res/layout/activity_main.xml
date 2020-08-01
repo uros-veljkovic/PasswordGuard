@@ -6,29 +6,88 @@
 
     <data>
 
+        <variable
+            name="clickHandler"
+            type="project.passwordguard.view.activity.MainActivity.ClickHandler" />
+
     </data>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/activity_main_constraint_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/light_gray"
-        android:orientation="horizontal"
-        tools:context=".activity.main.MainActivity">
+        android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/activity_main_rv"
+        <FrameLayout
+            android:id="@+id/activity_main_fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/credentials_item" />
+            android:layout_below="@id/activity_main_constraint_layout"
+            android:layout_marginBottom="56dp"
+            android:background="@color/light_gray"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </FrameLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/activity_main_fab_new_credentials"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="@{clickHandler::onFabNewCredentials}"
+            android:visibility="invisible"
+            app:fabSize="mini"
+            app:layout_constraintBottom_toTopOf="@id/activity_main_fab_new_credit_card"
+            app:layout_constraintLeft_toLeftOf="@id/activity_main_fab_new_credit_card"
+            app:layout_constraintRight_toRightOf="@id/activity_main_fab_new_credit_card"
+            app:srcCompat="@drawable/ic_lock"
+            tools:layout_editor_absoluteX="362dp"
+            tools:layout_editor_absoluteY="510dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/activity_main_fab_new_credit_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="@{clickHandler::onFabNewCreditCard}"
+            android:visibility="invisible"
+            app:fabSize="mini"
+            app:layout_constraintBottom_toTopOf="@id/activity_main_fab"
+            app:layout_constraintLeft_toLeftOf="@id/activity_main_fab"
+            app:layout_constraintRight_toRightOf="@id/activity_main_fab"
+            app:srcCompat="@drawable/ic_credit_card"
+            tools:layout_editor_absoluteX="362dp"
+            tools:layout_editor_absoluteY="560dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/activity_main_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="10dp"
             android:backgroundTint="@android:color/holo_blue_dark"
-            android:foreground="@drawable/ic_add" />
+            android:foreground="@drawable/ic_add"
+            android:onClick="@{clickHandler::onFabNew}"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/activity_main_bottom_navigation"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:layout_editor_absoluteX="346dp"
+            tools:layout_editor_absoluteY="610dp" />
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/activity_main_bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/light_gray"
+            android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:menu="@menu/bottom_nav"
+            app:onNavigationItemSelected="@{clickHandler::onNavigationClick}" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

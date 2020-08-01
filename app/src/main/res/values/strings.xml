@@ -5,4 +5,11 @@
     <string name="email_placeholder">mikicamilovanovic@gmail.com</string>
     <string name="password_placeholder">mikica_password</string>
     <string name="search_placeholder">Search</string>
+    <string name="card_name_placeholder">Card name</string>
+    <string name="credentials">Credentials</string>
+    <string name="credit_card">Credit card</string>
+    <string name="pin_placeholder">PIN</string>
+    <string name="expiration_date_placeholder">Expiration date:</string>
+    <string name="security_code_placeholder">Security code:</string>
+    <string name="card_logo_placeholder">Card logo</string>
 </resources>

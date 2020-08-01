@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_item_credentials"
+        android:icon="@drawable/ic_password"
+        android:title="@string/credentials" />
+
+    <item
+        android:id="@+id/nav_item_credit_card"
+        android:icon="@drawable/ic_credit_card"
+        android:title="@string/credit_card" />
+
+</menu>
