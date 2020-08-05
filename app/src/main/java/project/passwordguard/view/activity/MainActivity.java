@@ -1,38 +1,54 @@
 package project.passwordguard.view.activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
-import java.util.ArrayList;
+import java.util.Objects;
 
 import project.passwordguard.R;
-import project.passwordguard.databinding.ActivityMainBinding;
+import project.passwordguard.databinding.ActivityMainBindingImpl;
 import project.passwordguard.model.CredentialsEntity;
+import project.passwordguard.model.CreditCardEntity;
 import project.passwordguard.util.AnimationProvider;
 import project.passwordguard.view.fragment.CredentialsFragment;
 import project.passwordguard.view.fragment.CreditCardFragment;
+import project.passwordguard.viewmodel.FragmentCredentialsViewModel;
+import project.passwordguard.viewmodel.FragmentCreditCardViewModel;
+
+import static project.passwordguard.view.activity.CreateOrEditCredentialsInstanceActivity.EXTRA_CREDENTIALS;
+import static project.passwordguard.view.activity.CreateOrEditCreditCardInstanceActivity.EXTRA_CREDIT_CARD;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
-    private ClickHandler clickHandler;
+    public static final int NEW_CREDENTIALS_CODE = 1;
+    public static final int NEW_CREDIT_CARD_CODE = 2;
 
-    private ArrayList<CredentialsEntity> demoCredentials;
+    private FragmentCredentialsViewModel fragmentCredentialsViewModel;
+    private FragmentCreditCardViewModel fragmentCreditCardViewModel;
+    private ActivityMainBindingImpl binding;
+    private ClickHandler clickHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        initViewModel();
         initBinding();
         startFragment(new CredentialsFragment());
+    }
+
+    private void initViewModel() {
+        fragmentCredentialsViewModel = new ViewModelProvider(this).get(FragmentCredentialsViewModel.class);
+        fragmentCreditCardViewModel = new ViewModelProvider(this).get(FragmentCreditCardViewModel.class);
     }
 
     private void initBinding() {
@@ -72,12 +88,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public void onFabNew(View view) {
-            setVisibility(fabClicked);
-            setAnimation(fabClicked);
+            changeChildrenFabVisibility();
+            startFabAnimations();
             fabClicked = !fabClicked;
         }
 
-        public void setVisibility(boolean fabClicked) {
+        public void changeChildrenFabVisibility() {
             if (!fabClicked) {
                 binding.activityMainFabNewCredentials.setVisibility(View.VISIBLE);
                 binding.activityMainFabNewCreditCard.setVisibility(View.VISIBLE);
@@ -87,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        public void setAnimation(boolean fabClicked) {
+        public void startFabAnimations() {
             if (!fabClicked) {
                 binding.activityMainFab.startAnimation(AnimationProvider.animRotateOpen);
                 binding.activityMainFabNewCreditCard.startAnimation(AnimationProvider.animFromBottom);
@@ -100,18 +116,50 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public void onFabNewCredentials(View view) {
-            Toast.makeText(context, "onFabNewCredentials", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity.this, CreateOrEditCredentialsInstanceActivity.class);
+            startActivityForResult(intent, NEW_CREDENTIALS_CODE);
         }
 
         public void onFabNewCreditCard(View view) {
-            Toast.makeText(context, "onFabNewCreditCard", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity.this, CreateOrEditCreditCardInstanceActivity.class);
+            startActivityForResult(intent, NEW_CREDIT_CARD_CODE);
         }
     }
 
-    private void startFragment(Fragment selectedFragment) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode != RESULT_CANCELED) {
+            switch (requestCode) {
+                case NEW_CREDENTIALS_CODE:
+                    createCredentialsFrom(Objects.requireNonNull(data));
+                    break;
+                case NEW_CREDIT_CARD_CODE:
+                    createCreditCardFrom(Objects.requireNonNull(data));
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void createCreditCardFrom(Intent data) {
+        CreditCardEntity creditCardEntity = data.getParcelableExtra(EXTRA_CREDIT_CARD);
+        fragmentCreditCardViewModel.insert(creditCardEntity);
+//        startFragment(new CreditCardFragment());
+    }
+
+    private void createCredentialsFrom(Intent data) {
+        CredentialsEntity credentialsEntity = data.getParcelableExtra(EXTRA_CREDENTIALS);
+        fragmentCredentialsViewModel.insert(credentialsEntity);
+//        startFragment(new CredentialsFragment());
+    }
+
+    private void startFragment(Fragment concreteFragment) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.activity_main_fragment_container, selectedFragment)
+                .replace(R.id.activity_main_fragment_container, concreteFragment)
                 .commit();
     }
 }

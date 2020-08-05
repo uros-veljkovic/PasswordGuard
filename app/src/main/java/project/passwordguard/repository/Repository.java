@@ -74,6 +74,7 @@ public class Repository {
     }
 
     private static abstract class CredentialsAsyncTask extends AsyncTask<CredentialsEntity, Void, Void> {
+
         protected CredentialsDao dao;
 
         private CredentialsAsyncTask(CredentialsDao dao) {
@@ -91,9 +92,10 @@ public class Repository {
     }
 
     private static abstract class CreditCardAsyncTask extends AsyncTask<CreditCardEntity, Void, Void> {
+
         protected CreditCardDao dao;
 
-        private CreditCardAsyncTask(CreditCardDao dao) {
+        protected CreditCardAsyncTask(CreditCardDao dao) {
             this.dao = dao;
         }
 

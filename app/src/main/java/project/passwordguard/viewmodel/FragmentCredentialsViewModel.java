@@ -9,12 +9,12 @@ import java.util.List;
 import project.passwordguard.model.CredentialsEntity;
 import project.passwordguard.repository.Repository;
 
-public class CredentialsViewModel extends ViewModel {
+public class FragmentCredentialsViewModel extends ViewModel {
 
     private Repository repository;
     private LiveData<List<CredentialsEntity>> credentials;
 
-    public CredentialsViewModel() {
+    public FragmentCredentialsViewModel() {
         super();
         repository = Repository.getInstance();
         credentials = new MutableLiveData<>();

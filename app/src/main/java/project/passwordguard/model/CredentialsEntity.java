@@ -1,15 +1,19 @@
 package project.passwordguard.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import project.passwordguard.BR;
 
 @Entity(tableName = "credentials")
-public class CredentialsEntity extends BaseObservable {
+public class CredentialsEntity extends BaseObservable implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     private Long id;
@@ -30,6 +34,56 @@ public class CredentialsEntity extends BaseObservable {
         this.password = password;
     }
 
+    @Ignore
+    public CredentialsEntity() {
+    }
+
+    // ===== PARCELABLE IMPLEMENTATION =====
+    protected CredentialsEntity(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readLong();
+        }
+        websiteUrl = in.readString();
+        username = in.readString();
+        email = in.readString();
+        password = in.readString();
+    }
+
+    public static final Creator<CredentialsEntity> CREATOR = new Creator<CredentialsEntity>() {
+        @Override
+        public CredentialsEntity createFromParcel(Parcel in) {
+            return new CredentialsEntity(in);
+        }
+
+        @Override
+        public CredentialsEntity[] newArray(int size) {
+            return new CredentialsEntity[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        if (id == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(id);
+        }
+        dest.writeString(websiteUrl);
+        dest.writeString(username);
+        dest.writeString(email);
+        dest.writeString(password);
+    }
+
+    // ======================================
+
     public Long getId() {
         return id;
     }
@@ -43,8 +97,8 @@ public class CredentialsEntity extends BaseObservable {
         return websiteUrl;
     }
 
-    public void setWebsiteUrl(String websiteUrl) {
-        this.websiteUrl = websiteUrl;
+    public void setWebsiteUrl(String url) {
+        this.websiteUrl = url;
         notifyPropertyChanged(BR.websiteUrl);
     }
 
@@ -77,4 +131,5 @@ public class CredentialsEntity extends BaseObservable {
         this.password = password;
         notifyPropertyChanged(BR.password);
     }
+
 }

@@ -1,5 +1,8 @@
 package project.passwordguard.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.room.ColumnInfo;
@@ -9,7 +12,7 @@ import androidx.room.PrimaryKey;
 import project.passwordguard.BR;
 
 @Entity(tableName = "credit_card")
-public class CreditCardEntity extends BaseObservable {
+public class CreditCardEntity extends BaseObservable implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     private Long id;
@@ -35,6 +38,53 @@ public class CreditCardEntity extends BaseObservable {
         this.securityCode = securityCode;
         this.pin = pin;
     }
+
+    protected CreditCardEntity(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readLong();
+        }
+        bankName = in.readString();
+        cardName = in.readString();
+        cardNumber = in.readString();
+        expirationDate = in.readString();
+        securityCode = in.readString();
+        pin = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        if (id == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(id);
+        }
+        dest.writeString(bankName);
+        dest.writeString(cardName);
+        dest.writeString(cardNumber);
+        dest.writeString(expirationDate);
+        dest.writeString(securityCode);
+        dest.writeString(pin);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<CreditCardEntity> CREATOR = new Creator<CreditCardEntity>() {
+        @Override
+        public CreditCardEntity createFromParcel(Parcel in) {
+            return new CreditCardEntity(in);
+        }
+
+        @Override
+        public CreditCardEntity[] newArray(int size) {
+            return new CreditCardEntity[size];
+        }
+    };
 
     public Long getId() {
         return id;

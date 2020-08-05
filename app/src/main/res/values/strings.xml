@@ -12,4 +12,15 @@
     <string name="expiration_date_placeholder">Expiration date:</string>
     <string name="security_code_placeholder">Security code:</string>
     <string name="card_logo_placeholder">Card logo</string>
+    <string name="website_url_placeholder">Website URL</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="username">Username</string>
+    <string name="website">Website</string>
+    <string name="card_number">Card number</string>
+    <string name="security_code">Security code:</string>
+    <string name="expiration_date">Expiration date:</string>
+    <string name="slash">/</string>
 </resources>

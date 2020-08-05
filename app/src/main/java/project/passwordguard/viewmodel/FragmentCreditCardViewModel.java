@@ -9,12 +9,12 @@ import java.util.List;
 import project.passwordguard.model.CreditCardEntity;
 import project.passwordguard.repository.Repository;
 
-public class CreditCardViewModel extends ViewModel {
+public class FragmentCreditCardViewModel extends ViewModel {
 
     private Repository repository;
     private LiveData<List<CreditCardEntity>> creditCards;
 
-    public CreditCardViewModel() {
+    public FragmentCreditCardViewModel() {
         super();
         repository = Repository.getInstance();
         creditCards = new MutableLiveData<>();

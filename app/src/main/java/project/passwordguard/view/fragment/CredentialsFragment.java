@@ -1,13 +1,14 @@
 package project.passwordguard.view.fragment;
 
 import androidx.appcompat.widget.SearchView;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import project.passwordguard.R;
 import project.passwordguard.databinding.CredentialsFragmentBinding;
 import project.passwordguard.model.CredentialsEntity;
 import project.passwordguard.adapter.CredentialsAdapter;
-import project.passwordguard.viewmodel.CredentialsViewModel;
+import project.passwordguard.viewmodel.FragmentCredentialsViewModel;
 
 import android.os.Bundle;
 
@@ -24,14 +25,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class CredentialsFragment extends Fragment {
 
-    private CredentialsViewModel credentialsViewModel;
+    private FragmentCredentialsViewModel viewModel;
     private CredentialsFragmentBinding binding;
     private CredentialsAdapter adapter;
-    private ArrayList<CredentialsEntity> credentialsEntities;
 
     public static CredentialsFragment newInstance() {
         return new CredentialsFragment();
@@ -47,9 +47,7 @@ public class CredentialsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        generateDemoCredentials();
         initRecyclerView(inflater, container);
-
         return binding.getRoot();
     }
 
@@ -57,13 +55,9 @@ public class CredentialsFragment extends Fragment {
         binding = CredentialsFragmentBinding.inflate(inflater, container, false);
         binding.fragmentCredentialsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.fragmentCredentialsRecyclerView.setHasFixedSize(true);
-
-        adapter = new CredentialsAdapter(getContext(), credentialsEntities);
-        binding.fragmentCredentialsRecyclerView.setAdapter(adapter);
     }
 
-
-    private void generateDemoCredentials() {
+/*    private void generateDemoCredentials() {
         credentialsEntities = new ArrayList<>();
 
         credentialsEntities.add(new CredentialsEntity("www.facebook.com", "urkeev14", "uros.veljkovic1996@gmail.com", "password"));
@@ -74,18 +68,21 @@ public class CredentialsFragment extends Fragment {
         credentialsEntities.add(new CredentialsEntity("www.skype.com", "urkeev14", "uros.veljkovic1996@gmail.com", "password"));
         credentialsEntities.add(new CredentialsEntity("www.instagram.com", "urkeev14", "uros.veljkovic1996@gmail.com", "password"));
         credentialsEntities.add(new CredentialsEntity("www.snapchat.com", "urkeev14", "uros.veljkovic1996@gmail.com", "password"));
-    }
+    }*/
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        credentialsViewModel = new ViewModelProvider(this).get(CredentialsViewModel.class);
-        /*credentialsViewModel.getCredentials().observe(Objects.requireNonNull(getActivity()), new Observer<List<CredentialsEntity>>() {
+        viewModel = new ViewModelProvider(requireActivity()).get(FragmentCredentialsViewModel.class);
+        adapter = new CredentialsAdapter(requireContext());
+        binding.fragmentCredentialsRecyclerView.setAdapter(adapter);
+
+        viewModel.getCredentials().observe(getViewLifecycleOwner(), new Observer<List<CredentialsEntity>>() {
             @Override
             public void onChanged(List<CredentialsEntity> credentialsEntities) {
                 adapter.setCredentialsEntities(credentialsEntities);
             }
-        });*/
+        });
     }
 
     @Override

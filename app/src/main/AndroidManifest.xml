@@ -10,8 +10,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.activity.CreateCreditCardActivity"></activity>
-        <activity android:name=".view.activity.CreateCredentialsActivity" />
+        <activity android:name=".view.activity.CreateOrEditCreditCardInstanceActivity"></activity>
+        <activity android:name=".view.activity.CreateOrEditCredentialsInstanceActivity" />
         <activity android:name=".view.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

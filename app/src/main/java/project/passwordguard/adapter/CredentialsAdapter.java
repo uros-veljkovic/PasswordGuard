@@ -25,9 +25,9 @@ public class CredentialsAdapter extends RecyclerView.Adapter<CredentialsAdapter.
     private List<CredentialsEntity> credentialsEntities;
     private List<CredentialsEntity> credentialsEntitiesSearched;
 
-    public CredentialsAdapter(Context context, List<CredentialsEntity> credentialsEntities) {
+    public CredentialsAdapter(Context context) {
         this.context = context;
-        this.credentialsEntities = credentialsEntities;
+        this.credentialsEntities = new ArrayList<>();
         this.credentialsEntitiesSearched = new ArrayList<>(credentialsEntities);
     }
 

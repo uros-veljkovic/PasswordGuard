@@ -3,8 +3,6 @@ package project.passwordguard.view.fragment;
 import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,20 +20,17 @@ import android.view.inputmethod.EditorInfo;
 
 import java.util.ArrayList;
 
-import project.passwordguard.adapter.CredentialsAdapter;
 import project.passwordguard.adapter.CreditCardAdapter;
-import project.passwordguard.application.MyApplication;
-import project.passwordguard.databinding.CredentialsFragmentBinding;
 import project.passwordguard.databinding.CreditCardFragmentBinding;
 import project.passwordguard.model.CreditCardEntity;
-import project.passwordguard.viewmodel.CreditCardViewModel;
+import project.passwordguard.viewmodel.FragmentCreditCardViewModel;
 import project.passwordguard.R;
 
 public class CreditCardFragment extends Fragment {
 
     private SearchView searchView;
 
-    private CreditCardViewModel creditCardViewModel;
+    private FragmentCreditCardViewModel fragmentCreditCardViewModel;
     private CreditCardFragmentBinding binding;
     private CreditCardAdapter adapter;
     private ArrayList<CreditCardEntity> creditCardEntities;
@@ -101,7 +96,7 @@ public class CreditCardFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        creditCardViewModel = new ViewModelProvider(this).get(CreditCardViewModel.class);
+        fragmentCreditCardViewModel = new ViewModelProvider(this).get(FragmentCreditCardViewModel.class);
         // TODO: Use the ViewModel
 
     }

@@ -12,16 +12,17 @@ import project.passwordguard.repository.dao.CreditCardDao;
 public abstract class CreditCardDatabase extends RoomDatabase {
 
     private static CreditCardDatabase instance;
+
     public abstract CreditCardDao creditCardDao();
 
     public static synchronized CreditCardDatabase getInstance() {
         if (instance == null) {
             instance = Room.databaseBuilder(
                     MyApplication.applicationContext(),
-//                    context.getApplicationContext(),
                     CreditCardDatabase.class,
                     "credit_card_database")
                     .fallbackToDestructiveMigrationFrom()
+                    .allowMainThreadQueries()
                     .build();
         }
         return instance;

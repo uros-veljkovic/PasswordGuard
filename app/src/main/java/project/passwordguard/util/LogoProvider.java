@@ -24,11 +24,7 @@ public class LogoProvider {
 
     public static Drawable getLogoResourceFor(CredentialsEntity credentialsEntity) {
         drawable = null; // Reset drawable
-
-        String[] split = credentialsEntity.getWebsiteUrl().split("\\.", 3);// www.[facebook].com
-        String websiteName = split[1];
-
-        filterDrawables(websiteName);
+        filterDrawables(credentialsEntity.getWebsiteUrl());
 
         return (drawable == null) ? defaultCredentialsLogo : drawable;
     }
