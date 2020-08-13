@@ -1,26 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
     <string name="app_name">PasswordGuard</string>
-    <string name="website_placeholder">www.facebook.com</string>
-    <string name="username_placeholder">mikica_milovanovic</string>
-    <string name="email_placeholder">mikicamilovanovic@gmail.com</string>
-    <string name="password_placeholder">mikica_password</string>
-    <string name="search_placeholder">Search</string>
-    <string name="card_name_placeholder">Card name</string>
+
+    <string name="bank_name">Bank name</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="card_logo">Card logo</string>
+    <string name="card_name">Card name</string>
+    <string name="card_number">Card number</string>
     <string name="credentials">Credentials</string>
     <string name="credit_card">Credit card</string>
-    <string name="pin_placeholder">PIN</string>
-    <string name="expiration_date_placeholder">Expiration date:</string>
-    <string name="security_code_placeholder">Security code:</string>
-    <string name="card_logo_placeholder">Card logo</string>
-    <string name="website_url_placeholder">Website URL</string>
+
     <string name="email">Email</string>
-    <string name="password">Password</string>
-    <string name="cancel">Cancel</string>
-    <string name="save">Save</string>
-    <string name="username">Username</string>
-    <string name="website">Website</string>
-    <string name="card_number">Card number</string>
-    <string name="security_code">Security code:</string>
+    <string name="email_placeholder">mikicamilovanovic@gmail.com</string>
     <string name="expiration_date">Expiration date:</string>
+
+    <string name="password">Password</string>
+    <string name="password_placeholder">mikica_password</string>
+    <string name="pin">PIN</string>
+
+    <string name="save">Save</string>
+    <string name="search">Search</string>
+    <string name="security_code">Security code:</string>
     <string name="slash">/</string>
+
+    <string name="username">Username</string>
+    <string name="username_placeholder">mikica_milovanovic</string>
+
+    <string name="website">Website</string>
+    <string name="website_placeholder">www.facebook.com</string>
+    <string name="website_url">Website URL</string>
 </resources>

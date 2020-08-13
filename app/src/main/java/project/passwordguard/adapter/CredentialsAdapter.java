@@ -1,13 +1,19 @@
 package project.passwordguard.adapter;
 
 import android.content.Context;
+import android.renderscript.ScriptGroup;
+import android.text.InputType;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ObservableBoolean;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -16,6 +22,7 @@ import java.util.List;
 import project.passwordguard.R;
 import project.passwordguard.databinding.CredentialsItemBinding;
 import project.passwordguard.model.CredentialsEntity;
+import project.passwordguard.util.PasswordIconProvider;
 
 public class CredentialsAdapter extends RecyclerView.Adapter<CredentialsAdapter.ViewHolder> implements Filterable {
 
@@ -28,7 +35,7 @@ public class CredentialsAdapter extends RecyclerView.Adapter<CredentialsAdapter.
     public CredentialsAdapter(Context context) {
         this.context = context;
         this.credentialsEntities = new ArrayList<>();
-        this.credentialsEntitiesSearched = new ArrayList<>(credentialsEntities);
+        this.credentialsEntitiesSearched = new ArrayList<>(this.credentialsEntities);
     }
 
     @Override
@@ -47,7 +54,7 @@ public class CredentialsAdapter extends RecyclerView.Adapter<CredentialsAdapter.
         int resourceID = 0;
         switch (viewType) {
             case VIEW_LIST_EMPTY:
-//                resourceID = R.layout.credentials_item_empty;
+                resourceID = R.layout.credentials_item;
                 break;
             case VIEW_LIST_POPULATED:
                 resourceID = R.layout.credentials_item;
@@ -64,11 +71,6 @@ public class CredentialsAdapter extends RecyclerView.Adapter<CredentialsAdapter.
     @Override
     public void onBindViewHolder(@NonNull CredentialsAdapter.ViewHolder holder, int position) {
         holder.itemBinding.setCredentials(credentialsEntities.get(position));
-/*
-        Drawable logo = LogoProvider.getLogoResourceFor(credentialsEntity);
-        holder.itemBinding.credentialsItemIvWebsiteLogo.setForeground(logo);
-        holder.itemBinding.credentialsItemIvWebsiteLogo.refreshDrawableState();
-*/
     }
 
     @Override
@@ -78,8 +80,26 @@ public class CredentialsAdapter extends RecyclerView.Adapter<CredentialsAdapter.
 
     public void setCredentialsEntities(List<CredentialsEntity> credentialsEntities) {
         this.credentialsEntities = credentialsEntities;
+        this.credentialsEntitiesSearched = new ArrayList<>(this.credentialsEntities);
         notifyDataSetChanged();
     }
+
+    public CredentialsEntity getItem(int position){
+        return credentialsEntities.get(position);
+    }
+
+    public void deleteItem(int position){
+        credentialsEntities.remove(position);
+        credentialsEntitiesSearched = new ArrayList<>(credentialsEntities);
+        notifyItemRemoved(position);
+    }
+
+    public void insertItem(int position, CredentialsEntity entity){
+        credentialsEntities.add(position, entity);
+        credentialsEntitiesSearched = new ArrayList<>(credentialsEntities);
+        notifyItemInserted(position);
+    }
+
 
     @Override
     public Filter getFilter() {
@@ -118,11 +138,31 @@ public class CredentialsAdapter extends RecyclerView.Adapter<CredentialsAdapter.
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
+        private boolean passwordLocked = true;
         private CredentialsItemBinding itemBinding;
 
         public ViewHolder(@NonNull CredentialsItemBinding binding) {
             super(binding.getRoot());
             this.itemBinding = binding;
+
+            onIconPasswordClick();
+        }
+
+        private void onIconPasswordClick() {
+            itemBinding.icPassword.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (passwordLocked) {
+                        itemBinding.icPassword.setImageDrawable(PasswordIconProvider.unlocked);
+                        itemBinding.credentialsItemTvPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    } else {
+                        itemBinding.icPassword.setImageDrawable(PasswordIconProvider.locked);
+                        itemBinding.credentialsItemTvPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    }
+                    itemBinding.executePendingBindings();
+                    passwordLocked = !passwordLocked;
+                }
+            });
         }
     }
 }

@@ -41,28 +41,64 @@ public class Repository {
         return instance;
     }
 
-    public void insert(CredentialsEntity entity) {
-        new InsertCredentialsAsyncTask(credentialsDao).execute(entity);
+    public void insert(final CredentialsEntity entity) {
+        CredentialsDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                credentialsDao.insert(entity);
+            }
+        });
+//        new InsertCredentialsAsyncTask(credentialsDao).execute(entity);
     }
 
-    public void insert(CreditCardEntity entity) {
-        new InsertCreditCardAsyncTask(creditCardDao).execute(entity);
+    public void insert(final CreditCardEntity entity) {
+        CreditCardDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                creditCardDao.insert(entity);
+            }
+        });
+//        new InsertCreditCardAsyncTask(creditCardDao).execute(entity);
     }
 
-    public void update(CredentialsEntity entity) {
-        new UpdateCredentialsAsyncTask(credentialsDao).execute(entity);
+    public void update(final CredentialsEntity entity) {
+        CredentialsDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                credentialsDao.update(entity);
+            }
+        });
+//        new UpdateCredentialsAsyncTask(credentialsDao).execute(entity);
     }
 
-    public void update(CreditCardEntity entity) {
-        new UpdateCreditCardAsyncTask(creditCardDao).execute(entity);
+    public void update(final CreditCardEntity entity) {
+        CreditCardDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                creditCardDao.update(entity);
+            }
+        });
+//        new UpdateCreditCardAsyncTask(creditCardDao).execute(entity);
     }
 
-    public void delete(CredentialsEntity entity) {
-        new DeleteCredentialsAsyncTask(credentialsDao).execute(entity);
+    public void delete(final CredentialsEntity entity) {
+        CredentialsDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                credentialsDao.delete(entity);
+            }
+        });
+//        new DeleteCredentialsAsyncTask(credentialsDao).execute(entity);
     }
 
-    public void delete(CreditCardEntity entity) {
-        new DeleteCreditCardAsyncTask(creditCardDao).execute(entity);
+    public void delete(final CreditCardEntity entity) {
+        CreditCardDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                creditCardDao.delete(entity);
+            }
+        });
+//        new DeleteCreditCardAsyncTask(creditCardDao).execute(entity);
     }
 
     public LiveData<List<CredentialsEntity>> getCredentials() {
@@ -73,6 +109,7 @@ public class Repository {
         return creditCards;
     }
 
+/*
     private static abstract class CredentialsAsyncTask extends AsyncTask<CredentialsEntity, Void, Void> {
 
         protected CredentialsDao dao;
@@ -182,6 +219,7 @@ public class Repository {
             dao.delete(entity);
         }
     }
+*/
 
 
 }

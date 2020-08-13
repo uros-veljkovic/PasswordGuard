@@ -1,5 +1,7 @@
 package project.passwordguard.viewmodel;
 
+import android.app.Presentation;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -17,7 +19,6 @@ public class FragmentCreditCardViewModel extends ViewModel {
     public FragmentCreditCardViewModel() {
         super();
         repository = Repository.getInstance();
-        creditCards = new MutableLiveData<>();
         creditCards = repository.getCreditCards();
     }
 
@@ -34,6 +35,14 @@ public class FragmentCreditCardViewModel extends ViewModel {
     }
 
     public LiveData<List<CreditCardEntity>> getCreditCards() {
+        if(creditCards == null){
+            creditCards = new MutableLiveData<>();
+            loadCreditCards();
+        }
         return creditCards;
+    }
+
+    private void loadCreditCards() {
+        creditCards = repository.getCreditCards();
     }
 }

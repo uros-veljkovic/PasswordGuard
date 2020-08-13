@@ -4,13 +4,13 @@
     <item
         android:id="@+id/nav_item_credentials"
         android:icon="@drawable/ic_password"
-        android:iconTint="@color/primaryDarkColor"
+        android:iconTint="@drawable/item_selected"
         android:title="@string/credentials" />
 
     <item
         android:id="@+id/nav_item_credit_card"
         android:icon="@drawable/ic_credit_card"
-        android:iconTint="@color/primaryDarkColor"
+        android:iconTint="@drawable/item_selected"
         android:title="@string/credit_card" />
 
 </menu>

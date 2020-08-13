@@ -11,11 +11,13 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import project.passwordguard.R;
 import project.passwordguard.databinding.CreditCardItemBinding;
+import project.passwordguard.model.CredentialsEntity;
 import project.passwordguard.model.CreditCardEntity;
 
 public class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.ViewHolder> implements Filterable {
@@ -26,9 +28,9 @@ public class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.Vi
     private List<CreditCardEntity> creditCardEntities;
     private List<CreditCardEntity> creditCardEntitiesSearched;
 
-    public CreditCardAdapter(Context context, List<CreditCardEntity> creditCardEntities) {
+    public CreditCardAdapter(Context context) {
         this.context = context;
-        this.creditCardEntities = creditCardEntities;
+        this.creditCardEntities = new ArrayList<>();
         this.creditCardEntitiesSearched = new ArrayList<>(creditCardEntities);
     }
 
@@ -49,7 +51,7 @@ public class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.Vi
 
         switch (viewType) {
             case VIEW_LIST_EMPTY:
-//                resourceID = R.layout.credit_card_item_empty;
+                resourceID = R.layout.credit_card_item;
                 break;
             case VIEW_LIST_POPULATED:
                 resourceID = R.layout.credit_card_item;
@@ -77,6 +79,7 @@ public class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.Vi
 
     public void setCreditCardEntities(List<CreditCardEntity> entities) {
         this.creditCardEntities = entities;
+        this.creditCardEntitiesSearched = new ArrayList<>(this.creditCardEntities);
         notifyDataSetChanged();
     }
 
@@ -96,7 +99,9 @@ public class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.Vi
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
                 for (CreditCardEntity entity : creditCardEntitiesSearched) {
-                    if (entity.getCardName().toLowerCase().contains(filterPattern)) {
+                    if (entity.getCardName().toLowerCase().contains(filterPattern)
+                            || entity.getBankName().toLowerCase().contains(filterPattern)
+                            || entity.getPin().contains(filterPattern)) {
                         filteredList.add(entity);
                     }
                 }
@@ -114,6 +119,22 @@ public class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.Vi
             notifyDataSetChanged();
         }
     };
+
+    public CreditCardEntity getItem(int itemPosition) {
+        return creditCardEntities.get(itemPosition);
+    }
+
+    public void deleteItem(int position) {
+        creditCardEntities.remove(position);
+        creditCardEntitiesSearched = new ArrayList<>(creditCardEntities);
+        notifyItemRemoved(position);
+    }
+
+    public void insertItem(int position, CreditCardEntity entity) {
+        creditCardEntities.add(position, entity);
+        creditCardEntitiesSearched = new ArrayList<>(creditCardEntities);
+        notifyItemInserted(position);
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private CreditCardItemBinding itemBinding;

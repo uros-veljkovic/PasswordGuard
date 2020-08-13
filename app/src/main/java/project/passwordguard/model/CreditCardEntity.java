@@ -7,6 +7,7 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import project.passwordguard.BR;
@@ -37,6 +38,10 @@ public class CreditCardEntity extends BaseObservable implements Parcelable {
         this.expirationDate = expirationDate;
         this.securityCode = securityCode;
         this.pin = pin;
+    }
+
+    @Ignore
+    public CreditCardEntity() {
     }
 
     protected CreditCardEntity(Parcel in) {

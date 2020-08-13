@@ -17,7 +17,6 @@ public class FragmentCredentialsViewModel extends ViewModel {
     public FragmentCredentialsViewModel() {
         super();
         repository = Repository.getInstance();
-        credentials = new MutableLiveData<>();
         credentials = repository.getCredentials();
     }
 
@@ -34,7 +33,15 @@ public class FragmentCredentialsViewModel extends ViewModel {
     }
 
     public LiveData<List<CredentialsEntity>> getCredentials() {
+        if(credentials == null){
+            credentials = new MutableLiveData<List<CredentialsEntity>>();
+            loadCredentials();
+        }
         return credentials;
+    }
+
+    public void loadCredentials(){
+        credentials = repository.getCredentials();
     }
 
 }

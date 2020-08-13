@@ -10,8 +10,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.activity.CreateOrEditCreditCardInstanceActivity"></activity>
-        <activity android:name=".view.activity.CreateOrEditCredentialsInstanceActivity" />
+
+        <activity
+            android:name=".view.activity.CreateOrEditCreditCardInstanceActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".view.activity.CreateOrEditCredentialsInstanceActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".view.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,6 +31,10 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

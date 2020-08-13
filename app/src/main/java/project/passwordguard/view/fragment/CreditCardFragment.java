@@ -1,15 +1,8 @@
 package project.passwordguard.view.fragment;
 
-import androidx.appcompat.widget.SearchView;
-import androidx.lifecycle.ViewModelProvider;
-
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,25 +11,44 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 
-import java.util.ArrayList;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.snackbar.Snackbar;
+
+import java.util.List;
+
+import project.passwordguard.R;
 import project.passwordguard.adapter.CreditCardAdapter;
 import project.passwordguard.databinding.CreditCardFragmentBinding;
+import project.passwordguard.listener.RecyclerViewSwipeListener;
 import project.passwordguard.model.CreditCardEntity;
+import project.passwordguard.repository.Repository;
+import project.passwordguard.util.swipe.SwipeActionManager;
+import project.passwordguard.view.activity.CreateOrEditCreditCardInstanceActivity;
 import project.passwordguard.viewmodel.FragmentCreditCardViewModel;
-import project.passwordguard.R;
 
-public class CreditCardFragment extends Fragment {
+import static project.passwordguard.util.constants.Constants.EXTRA_CREDIT_CARD;
+import static project.passwordguard.util.constants.Constants.UPDATE_CREDIT_CARD_CODE;
+
+public class CreditCardFragment extends Fragment implements RecyclerViewSwipeListener {
 
     private SearchView searchView;
 
-    private FragmentCreditCardViewModel fragmentCreditCardViewModel;
+    private FragmentCreditCardViewModel viewModel;
     private CreditCardFragmentBinding binding;
     private CreditCardAdapter adapter;
-    private ArrayList<CreditCardEntity> creditCardEntities;
 
-    public static CreditCardFragment newInstance() {
-        return new CreditCardFragment();
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
     }
 
     @Override
@@ -48,40 +60,10 @@ public class CreditCardFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        generateDemoCreditCards();
+
         initRecyclerView(inflater, container);
-
+        initRecyclerViewSwipeHelper();
         return binding.getRoot();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-
-    }
-
-    private void generateDemoCreditCards() {
-        creditCardEntities = new ArrayList<>();
-
-        creditCardEntities.add(new CreditCardEntity("Banca Intesa",
-                "MasterCard",
-                "5555 4444 3333 2222",
-                "3/21",
-                "529",
-                "1012"));
-        creditCardEntities.add(new CreditCardEntity("Adico bank",
-                "MasterCard",
-                "5555 4444 3333 2222",
-                "3/21",
-                "529",
-                "1012"));
-        creditCardEntities.add(new CreditCardEntity("OTP bank",
-                "VISA",
-                "5555 4444 3333 2222",
-                "3/21",
-                "529",
-                "1012"));
     }
 
     private void initRecyclerView(LayoutInflater inflater, ViewGroup container) {
@@ -89,28 +71,65 @@ public class CreditCardFragment extends Fragment {
         binding.fragmentCreditCardRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.fragmentCreditCardRecyclerView.setHasFixedSize(true);
 
-        adapter = new CreditCardAdapter(getContext(), creditCardEntities);
+        viewModel = new ViewModelProvider(requireActivity()).get(FragmentCreditCardViewModel.class);
+        adapter = new CreditCardAdapter(requireContext());
+    }
+
+    private void initRecyclerViewSwipeHelper() {
+        SwipeActionManager swipeActionManager = new SwipeActionManager(this);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeActionManager.getCallback());
+        itemTouchHelper.attachToRecyclerView(binding.fragmentCreditCardRecyclerView);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        viewModel.getCreditCards().observe(getViewLifecycleOwner(), new Observer<List<CreditCardEntity>>() {
+            @Override
+            public void onChanged(List<CreditCardEntity> entities) {
+                adapter.setCreditCardEntities(entities);
+            }
+        });
         binding.fragmentCreditCardRecyclerView.setAdapter(adapter);
+        binding.executePendingBindings();
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        fragmentCreditCardViewModel = new ViewModelProvider(this).get(FragmentCreditCardViewModel.class);
-        // TODO: Use the ViewModel
+    public void onSwipeLeft(final int itemPosition) {
+        final CreditCardEntity entity = adapter.getItem(itemPosition);
+
+        adapter.deleteItem(itemPosition);
+        Repository.getInstance().delete(entity);
+
+        Snackbar.make(binding.fragmentCreditCardRecyclerView, "Credit card from " + entity.getBankName() + " deleted.", Snackbar.LENGTH_LONG)
+                .setAction("Undo", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        adapter.insertItem(itemPosition, entity);
+                        Repository.getInstance().insert(entity);
+                    }
+                }).show();
+    }
+
+    @Override
+    public void onSwipeRight(int itemPosition) {
+        CreditCardEntity entity = adapter.getItem(itemPosition);
+
+        Intent intent = new Intent(getActivity(), CreateOrEditCreditCardInstanceActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(EXTRA_CREDIT_CARD, entity);
+        intent.putExtras(bundle);
+        getActivity().startActivityForResult(intent, UPDATE_CREDIT_CARD_CODE);
 
     }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+
         inflater.inflate(R.menu.menu_search, menu);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-
         MenuItem searchItem = menu.findItem(R.id.item_search);
+
         searchView = (SearchView) searchItem.getActionView();
         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
@@ -121,10 +140,12 @@ public class CreditCardFragment extends Fragment {
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                adapter.getFilter().filter(newText);
+            public boolean onQueryTextChange(String searchedString) {
+                adapter.getFilter().filter(searchedString);
                 return false;
             }
         });
+
     }
+
 }

@@ -11,15 +11,18 @@ import androidx.lifecycle.ViewModelProvider;
 
 import project.passwordguard.R;
 import project.passwordguard.databinding.ActivityCreateOrEditCredentialsInstanceBinding;
-import project.passwordguard.util.WebsiteDataProvider;
+import project.passwordguard.model.CredentialsEntity;
+import project.passwordguard.util.AutocompleteTextViewDataProvider;
 import project.passwordguard.viewmodel.CredentialsInstanceViewModel;
+
+import static project.passwordguard.util.constants.Constants.CREATE_CREDENTIALS_CODE;
+import static project.passwordguard.util.constants.Constants.EXTRA_CREDENTIALS;
+import static project.passwordguard.util.constants.Constants.UPDATE_CREDENTIALS_CODE;
 
 public class CreateOrEditCredentialsInstanceActivity extends AppCompatActivity {
 
-    public static final String EXTRA_CREDENTIALS = "EXTRA_CREDENTIALS";
     private ActivityCreateOrEditCredentialsInstanceBinding binding;
     private CredentialsInstanceViewModel viewModel;
-    private ClickHander clickHander = new ClickHander(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,21 +30,27 @@ public class CreateOrEditCredentialsInstanceActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_create_or_edit_credentials_instance);
         viewModel = new ViewModelProvider(this).get(CredentialsInstanceViewModel.class);
 
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+
+        if(bundle != null && bundle.getParcelable(EXTRA_CREDENTIALS) != null){
+            CredentialsEntity entity = bundle.getParcelable(EXTRA_CREDENTIALS);
+            viewModel.setEntity(entity);
+            binding.activityCreteOrEdtiCredentialsInstanceBtnSave.setText("Update");
+        }
+
         bind();
     }
 
     private void bind() {
-        binding.activityMainActvWebsiteName.setAdapter(WebsiteDataProvider.getWebsiteAdapter(this));
+        binding.activityMainActvWebsiteName.setAdapter(AutocompleteTextViewDataProvider.getWebsiteAdapter(this));
         binding.setViewModel(viewModel);
-        binding.setClickHandler(clickHander);
+        binding.setClickHandler(new ClickHander());
     }
 
     public class ClickHander {
 
-        Context context;
-
-        public ClickHander(Context context) {
-            this.context = context;
+        public ClickHander(){
         }
 
         public void onBtnSave(View view) {
@@ -54,7 +63,8 @@ public class CreateOrEditCredentialsInstanceActivity extends AppCompatActivity {
         }
 
         public void onBtnCancel(View view) {
-
+            setResult(RESULT_CANCELED);
+            finish();
         }
     }
 
